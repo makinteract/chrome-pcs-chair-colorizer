@@ -1,0 +1,6 @@
+{
+  "name": "chrome-pcschair-colorizer",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2"
+  }
+}
