@@ -4,12 +4,14 @@ function colorize(color) {
     clearInterval(prevInterval);
   }
 
+  const UPDATE_INTERVAL = 100;
+
   const interval = setInterval(() => {
-    const papers = document.querySelectorAll('.paper');
+    const papers = document.querySelectorAll('li.acPaper');
     papers.forEach((paper) => {
       paper.style.backgroundColor = color;
     });
-  }, 200);
+  }, UPDATE_INTERVAL);
   localStorage.setItem('interval', interval);
 }
 

@@ -9,7 +9,7 @@
   setModeCurrent(true); // dark mode
 
   let hex = '#e6e909';
-  let correctPage = false;
+  let correctPage = true;
 
   onMount(async () => {
     const url = await getURL();
@@ -60,7 +60,7 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    min-width: 300px;
+    min-width: 280px;
     min-height: 200px;
   }
 
