@@ -45,16 +45,20 @@ export async function reloadPage() {
 }
 
 export async function getURL(): Promise<string | undefined> {
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    currentWindow: true,
-  });
-  if (!tab.id) return 'none'; // no tab selected
+  try {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    if (!tab.id) return 'none'; // no tab selected
 
-  const [res] = await chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    func: () => document.URL,
-  });
+    const [res] = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => document.URL,
+    });
 
-  return res.result;
+    return res.result;
+  } catch (e) {
+    return 'No URL found';
+  }
 }
