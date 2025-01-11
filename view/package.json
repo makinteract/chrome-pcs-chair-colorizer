@@ -1,13 +1,11 @@
 {
-  "name": "view",
+  "name": "chrome-ext-view",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base ''",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+    "build": "vite build --base ''"
   },
   "devDependencies": {
     "@skeletonlabs/skeleton": "^2.10.4",

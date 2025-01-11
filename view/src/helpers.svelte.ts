@@ -8,7 +8,7 @@ function colorize(color) {
 
   const interval = setInterval(() => {
     const papers = document.querySelectorAll('li.acPaper');
-    papers.forEach((paper) => {
+    papers?.forEach((paper) => {
       paper.style.backgroundColor = color;
     });
   }, UPDATE_INTERVAL);

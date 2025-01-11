@@ -8,7 +8,7 @@
 
   setModeCurrent(true); // dark mode
 
-  let hex = '#e6e909';
+  let hex = localStorage.getItem('bgColor') || '#e6e909';
   let correctPage = true;
 
   onMount(async () => {
@@ -18,13 +18,14 @@
 
   function update() {
     changeBg(hex);
+    localStorage.setItem('bgColor', hex);
   }
 </script>
 
-<div class="container bg-surface-300">
+<div class="container bg-surface-900">
   {#if !correctPage}
     <!-- Show an icon and text in the center of the panel to indicat that this ist he wrong website -->
-    <div class="text-center">
+    <div class="text-center text-error-300">
       <i class="fa-solid fa-exclamation-triangle text-warning"></i>
       <h3 class="text-warning">This is not PCS Chair</h3>
     </div>
@@ -33,7 +34,7 @@
     <div class="buttons">
       <button
         type="button"
-        class="btn btn-sm variant-filled mb-3"
+        class="btn btn-sm variant-filled-secondary mb-3"
         on:click={update}
       >
         <span><i class="fa-solid fa-paint-roller"></i></span>
@@ -41,7 +42,7 @@
       </button>
       <button
         type="button"
-        class="btn btn-sm variant-filled mb-3"
+        class="btn btn-sm variant-filled-secondary mb-3"
         on:click={reloadPage}
       >
         <span><i class="fa-solid fa-eraser"></i></span>
