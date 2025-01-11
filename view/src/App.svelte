@@ -6,9 +6,10 @@
   import { changeBg, reloadPage, getURL } from './helpers.svelte';
   import { onMount } from 'svelte';
 
+  const DEFAULT_COLOR = '#e6e909';
   setModeCurrent(true); // dark mode
 
-  let hex = localStorage.getItem('bgColor') || '#e6e909';
+  let hex = localStorage.getItem('bgColor') || DEFAULT_COLOR;
   let correctPage = true;
 
   onMount(async () => {
@@ -27,7 +28,7 @@
     <!-- Show an icon and text in the center of the panel to indicat that this ist he wrong website -->
     <div class="text-center text-error-300">
       <i class="fa-solid fa-exclamation-triangle text-warning"></i>
-      <h3 class="text-warning">This is not PCS Chair</h3>
+      <h3 class="text-warning">This site is not PCS Chair</h3>
     </div>
   {:else}
     <ColorPicker bind:hex position="responsive" isDialog={false} />
@@ -38,7 +39,7 @@
         on:click={update}
       >
         <span><i class="fa-solid fa-paint-roller"></i></span>
-        <span>Update</span>
+        <span>Colorize</span>
       </button>
       <button
         type="button"
