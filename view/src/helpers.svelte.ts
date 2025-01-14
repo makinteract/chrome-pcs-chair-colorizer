@@ -1,4 +1,4 @@
-function colorize(color) {
+function colorize(color: string) {
   const prevInterval = localStorage.getItem('interval');
   if (prevInterval) {
     clearInterval(prevInterval);
@@ -7,12 +7,14 @@ function colorize(color) {
   const UPDATE_INTERVAL = 100;
 
   const interval = setInterval(() => {
-    const papers = document.querySelectorAll('li.acPaper');
+    const papers = Array.from(
+      document.querySelectorAll('li.acPaper') as NodeListOf<HTMLElement>
+    );
     papers?.forEach((paper) => {
       paper.style.backgroundColor = color;
     });
   }, UPDATE_INTERVAL);
-  localStorage.setItem('interval', interval);
+  localStorage.setItem('interval', `${interval}`);
 }
 
 export async function changeBg(color: string) {
