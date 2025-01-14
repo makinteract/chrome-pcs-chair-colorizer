@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "pcs-chair-colorizer",
+  "name": "PCS Chair Colorizer",
   "version": "0.1.1",
-  "description": "Chrome extension for PCSChair colorizer",
+  "description": "Chrome extension for colorizing own papers in PCSChair",
   "icons": {
     "16": "assets/icon.png",
     "48": "assets/icon.png",
@@ -13,6 +13,6 @@
     "default_title": "PCS Chair Colorizer",
     "default_popup": "view/dist/index.html"
   },
-
+  "author": "make::lab",
   "permissions": ["activeTab", "scripting"]
 }
