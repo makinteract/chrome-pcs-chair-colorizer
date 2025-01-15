@@ -1,8 +1,46 @@
-// content.js
-// alert('Ready');
+// // content.js
+const DEFAULT_COLOR = '#e6e909';
 
-async function colorize(color) {
-  const prevInterval = await chrome.storage.local.get(['pcs-chair-bgcolor']);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'changeBgColor') {
+    changeBgColor(request.tabId, request.color);
+    sendResponse({ result: 'ok' });
+  } else if (request.action === 'resetColor') {
+    resetColor(request.tabId);
+    sendResponse({ result: 'ok' });
+  } else if (request.action === 'getURL') {
+    sendResponse({ result: document.URL });
+  }
+});
+
+async function changeBgColor(tabId, color) {
+  // Save color to storage
+  await chrome.storage.local.set({ 'pcs-chair-bgcolor': color });
+  // Change BG color of the popup
+  colorize(color);
+  // Change badge color
+  chrome.runtime.sendMessage({
+    action: 'changeBadgeColor',
+    color,
+    tabId,
+  });
+}
+
+async function resetColor(tabId) {
+  // Save color to storage
+  await chrome.storage.local.set({ 'pcs-chair-bgcolor': '' });
+  // Change BG color of the popup
+  reloadPage();
+  // Change badge color
+  chrome.runtime.sendMessage({
+    action: 'changeBadgeColor',
+    color: '',
+    tabId,
+  });
+}
+
+function colorize(color) {
+  const prevInterval = localStorage.getItem('interval');
   if (prevInterval) {
     clearInterval(prevInterval);
   }
@@ -18,27 +56,6 @@ async function colorize(color) {
   localStorage.setItem('interval', `${interval}`);
 }
 
-async function getURL() {
-  try {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-    if (!tab.id) return 'none'; // no tab selected
-
-    const [res] = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => document.URL,
-    });
-
-    return res.result;
-  } catch (e) {
-    return 'No URL found';
-  }
+function reloadPage() {
+  window.location.reload();
 }
-
-// const DEFAULT_COLOR = '#e6e909';
-const DEFAULT_COLOR = '#ff0000';
-let hex = await chrome.storage.local.get(['pcs-chair-bgcolor']);
-console.log('hex:', hex);
-colorize(hex);

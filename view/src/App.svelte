@@ -3,30 +3,60 @@
   import '@fortawesome/fontawesome-free/css/all.min.css';
   import { setModeCurrent } from '@skeletonlabs/skeleton';
   import ColorPicker from 'svelte-awesome-color-picker';
-  import { changeBgColor, resetColor, getURL } from './helpers.svelte';
   import { onMount } from 'svelte';
 
-  const DEFAULT_COLOR = '#e6e909';
   setModeCurrent(true); // dark mode
 
-  // Helpers
-  async function getColor(): Promise<string> {
-    const { color } = await chrome.storage.local.get(['pcs-chair-bgcolor']);
-    return color || DEFAULT_COLOR;
-  }
-
-  let hex = DEFAULT_COLOR;
-  let correctPage = true;
+  let hex = '#000000';
+  let correctPage = false;
 
   onMount(async () => {
-    hex = await getColor();
     const url = await getURL();
+    console.log(url);
     if (url) correctPage = url?.includes('pcschair.org');
-    update();
   });
 
-  function update() {
-    changeBgColor(hex);
+  async function colorize() {
+    const tabId = await getTabId();
+    if (!tabId) return;
+
+    await sendMessage(tabId, { action: 'changeBgColor', color: hex, tabId });
+  }
+
+  async function resetColor() {
+    const tabId = await getTabId();
+    if (!tabId) return;
+
+    await sendMessage(tabId, { action: 'resetColor', color: hex });
+  }
+
+  async function getURL() {
+    const tabId = await getTabId();
+    if (!tabId) return;
+
+    // send message to content script
+    const response = (await sendMessage(tabId, { action: 'getURL' })) as {
+      result: string;
+    };
+    return response?.result;
+  }
+
+  // Helpers
+  async function getTabId() {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    return tab.id;
+  }
+
+  // promisify for sending message to content script
+  function sendMessage(tabId: number, message: any) {
+    return new Promise((resolve, _) => {
+      chrome.tabs.sendMessage(tabId, message, function (response) {
+        resolve(response);
+      });
+    });
   }
 </script>
 
@@ -43,7 +73,7 @@
       <button
         type="button"
         class="btn btn-sm variant-filled-secondary mb-3"
-        on:click={update}
+        on:click={colorize}
       >
         <span><i class="fa-solid fa-paint-roller"></i></span>
         <span>Colorize</span>
