@@ -14,5 +14,14 @@
     "default_popup": "view/dist/index.html"
   },
   "author": "make::lab",
-  "permissions": ["activeTab", "scripting"]
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://www.pcschair.org/venues/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "permissions": ["activeTab", "scripting", "storage"]
 }

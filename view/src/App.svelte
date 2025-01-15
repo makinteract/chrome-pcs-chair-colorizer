@@ -1,25 +1,32 @@
-<script>
+<script lang="ts">
   import './app.css';
   import '@fortawesome/fontawesome-free/css/all.min.css';
   import { setModeCurrent } from '@skeletonlabs/skeleton';
   import ColorPicker from 'svelte-awesome-color-picker';
-  import { changeBg, reloadPage, getURL } from './helpers.svelte';
+  import { changeBgColor, resetColor, getURL } from './helpers.svelte';
   import { onMount } from 'svelte';
 
   const DEFAULT_COLOR = '#e6e909';
   setModeCurrent(true); // dark mode
 
-  let hex = localStorage.getItem('bgColor') || DEFAULT_COLOR;
+  // Helpers
+  async function getColor(): Promise<string> {
+    const { color } = await chrome.storage.local.get(['pcs-chair-bgcolor']);
+    return color || DEFAULT_COLOR;
+  }
+
+  let hex = DEFAULT_COLOR;
   let correctPage = true;
 
   onMount(async () => {
+    hex = await getColor();
     const url = await getURL();
     if (url) correctPage = url?.includes('pcschair.org');
+    update();
   });
 
   function update() {
-    changeBg(hex);
-    localStorage.setItem('bgColor', hex);
+    changeBgColor(hex);
   }
 </script>
 
@@ -44,7 +51,7 @@
       <button
         type="button"
         class="btn btn-sm variant-filled-secondary mb-3"
-        on:click={reloadPage}
+        on:click={resetColor}
       >
         <span><i class="fa-solid fa-eraser"></i></span>
         <span>Reset</span>
