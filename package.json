@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "cd view && npm run build",
-    "package": "zip -r extension.zip assets/* manifest.json view/dist/*"
+    "package": "zip -r extension.zip assets/* view/dist/* manifest.json *.js"
   },
   "author": "MAKinteract",
   "license": "MIT",

@@ -1,4 +1,6 @@
-# 0.1.1
+# Summary of changes
+
+## 0.1.1
 
 - Added badges
 - Refactored code
