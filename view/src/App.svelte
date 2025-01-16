@@ -12,8 +12,8 @@
 
   onMount(async () => {
     const url = await getURL();
-    console.log(url);
     if (url) correctPage = url?.includes('pcschair.org');
+    hex = (await loadColor()) as string;
   });
 
   async function colorize() {
@@ -27,7 +27,21 @@
     const tabId = await getTabId();
     if (!tabId) return;
 
-    await sendMessage(tabId, { action: 'resetColor', color: hex });
+    await sendMessage(tabId, { action: 'resetColor', tabId });
+  }
+
+  async function loadColor() {
+    const tabId = await getTabId();
+    if (!tabId) return;
+
+    const response = (await sendMessage(tabId, {
+      action: 'loadInitialColor',
+      tabId,
+    })) as {
+      result: string;
+    };
+    console.log(response);
+    return response?.result;
   }
 
   async function getURL() {
