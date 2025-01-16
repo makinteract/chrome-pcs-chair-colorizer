@@ -7,8 +7,5 @@
   },
   "author": "MAKinteract",
   "license": "MIT",
-  "description": "Chrome Extension for colorizing PCS Chair",
-  "dependencies": {
-    "@types/chrome": "^0.0.296"
-  }
+  "description": "Chrome Extension for colorizing PCS Chair"
 }

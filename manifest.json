@@ -29,5 +29,6 @@
     "scripting",
     "storage",
     "nativeMessaging"
-  ]
+  ],
+  "host_permissions": ["http://www.pcschair.org/*"]
 }

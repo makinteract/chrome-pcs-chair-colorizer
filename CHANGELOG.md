@@ -5,4 +5,6 @@
 - Added badges
 - Refactored code
 - The colorization is triggered when the user lands on the pscchair.org website.
-- New screenshots, description, icon
+- New screenshots, description, and icon
+- Added support for all sorts of events (tabs activation and window focus)
+- Updated README and screenshots
