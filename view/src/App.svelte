@@ -3,75 +3,46 @@
   import '@fortawesome/fontawesome-free/css/all.min.css';
   import { setModeCurrent } from '@skeletonlabs/skeleton';
   import ColorPicker from 'svelte-awesome-color-picker';
+  import { sendMessageToContent, setBadge, resetBadge, getURL } from './utils';
   import { onMount } from 'svelte';
 
   setModeCurrent(true); // dark mode
 
-  let hex = '#000000';
-  let correctPage = false;
+  // Globals
+  const DEFAULT_COLOR = '#e6e909';
+  let hex = DEFAULT_COLOR;
+  let correctPage = true;
+
+  // Helpers
+  async function colorize() {
+    // Save color to storage
+    await chrome.storage.local.set({ 'pcs-chair-bgcolor': hex });
+    await sendMessageToContent({ action: 'changeBgColor', color: hex });
+    setBadge({ text: 'ON', color: hex });
+  }
+
+  async function resetColor() {
+    // Save color to storage
+    await chrome.storage.local.set({ 'pcs-chair-bgcolor': '' });
+    await sendMessageToContent({ action: 'reloadPage' });
+    resetBadge();
+  }
 
   onMount(async () => {
     const url = await getURL();
     if (url) correctPage = url?.includes('pcschair.org');
-    hex = (await loadColor()) as string;
+
+    // Load color from storage
+    const currentCol = (
+      (await chrome.storage.local.get('pcs-chair-bgcolor')) as any
+    )['pcs-chair-bgcolor'];
+
+    if (currentCol) {
+      colorize();
+      setBadge({ text: 'ON', color: hex });
+      hex = currentCol;
+    }
   });
-
-  async function colorize() {
-    const tabId = await getTabId();
-    if (!tabId) return;
-
-    await sendMessage(tabId, { action: 'changeBgColor', color: hex, tabId });
-  }
-
-  async function resetColor() {
-    const tabId = await getTabId();
-    if (!tabId) return;
-
-    await sendMessage(tabId, { action: 'resetColor', tabId });
-  }
-
-  async function loadColor() {
-    const tabId = await getTabId();
-    if (!tabId) return;
-
-    const response = (await sendMessage(tabId, {
-      action: 'loadInitialColor',
-      tabId,
-    })) as {
-      result: string;
-    };
-    console.log(response);
-    return response?.result;
-  }
-
-  async function getURL() {
-    const tabId = await getTabId();
-    if (!tabId) return;
-
-    // send message to content script
-    const response = (await sendMessage(tabId, { action: 'getURL' })) as {
-      result: string;
-    };
-    return response?.result;
-  }
-
-  // Helpers
-  async function getTabId() {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-    return tab.id;
-  }
-
-  // promisify for sending message to content script
-  function sendMessage(tabId: number, message: any) {
-    return new Promise((resolve, _) => {
-      chrome.tabs.sendMessage(tabId, message, function (response) {
-        resolve(response);
-      });
-    });
-  }
 </script>
 
 <div class="container bg-surface-900">
