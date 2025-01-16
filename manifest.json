@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "PCS Chair Colorizer",
   "version": "0.1.1",
-  "description": "Chrome extension for colorizing own papers in PCSChair",
+  "description": "Chrome extension for colorizing AC own papers in PCSChair",
   "icons": {
     "16": "assets/icon.png",
     "48": "assets/icon.png",
@@ -23,5 +23,11 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": ["activeTab", "scripting", "storage", "nativeMessaging"]
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "storage",
+    "nativeMessaging"
+  ]
 }

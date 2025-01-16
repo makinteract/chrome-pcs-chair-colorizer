@@ -2,17 +2,19 @@
 
 // Dispatch messags
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  // console.log('Message received', request);
   if (request.action === 'changeBgColor') {
     colorize(request.color);
+    sendResponse({ response: 'ok' });
   } else if (request.action === 'reloadPage') {
     reloadPage();
-  } else if (request.action === 'getURL') {
-    const url = window.location.href;
-    sendResponse({ response: url });
+    sendResponse({ response: 'ok' });
   }
 });
 
 function colorize(color) {
+  if (!color) return;
+
   const prevInterval = localStorage.getItem('interval');
   if (prevInterval) {
     clearInterval(prevInterval);

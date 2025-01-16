@@ -8,18 +8,23 @@ chrome.action.onClicked.addListener((tab) => {
   });
 });
 
-chrome.tabs.onUpdated.addListener(function (tabid, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
   if (tab.active && tab.status == 'complete') {
-    // console.log('Tab updated', tab);
-    chrome.tabs.sendMessage(
-      tabid,
-      { action: 'getURL' },
-      function ({ response }) {
-        console.log('Response received', response);
-        if (response.includes('pcschair.org/venues/')) {
-          chrome.action.openPopup(); // open up the popup automatically
-        }
-      }
-    );
+    const url = tab.url;
+
+    if (url && url.includes('pcschair.org/venues/')) {
+      // chrome.action.openPopup(); // open up the popup automatically
+      // Colorize if with default
+      chrome.storage.local.get(['pcs-chair-bgcolor'], (data) => {
+        const color = data['pcs-chair-bgcolor'];
+        if (!color) return;
+        chrome.tabs.sendMessage(tabId, { action: 'changeBgColor', color });
+        chrome.action.setBadgeBackgroundColor({ color });
+        chrome.action.setBadgeText({
+          tabId,
+          text: 'ON',
+        });
+      });
+    }
   }
 });

@@ -23,8 +23,8 @@
 
   async function resetColor() {
     // Save color to storage
-    await chrome.storage.local.set({ 'pcs-chair-bgcolor': '' });
-    await sendMessageToContent({ action: 'reloadPage' });
+    await chrome.storage.local.remove(['pcs-chair-bgcolor']);
+    sendMessageToContent({ action: 'reloadPage' });
     resetBadge();
   }
 
@@ -33,15 +33,12 @@
     if (url) correctPage = url?.includes('pcschair.org');
 
     // Load color from storage
-    const currentCol = (
-      (await chrome.storage.local.get('pcs-chair-bgcolor')) as any
-    )['pcs-chair-bgcolor'];
+    hex =
+      ((await chrome.storage.local.get('pcs-chair-bgcolor')) as any)[
+        'pcs-chair-bgcolor'
+      ] || DEFAULT_COLOR;
 
-    if (currentCol) {
-      colorize();
-      setBadge({ text: 'ON', color: hex });
-      hex = currentCol;
-    }
+    // colorize();
   });
 </script>
 
@@ -69,7 +66,7 @@
         on:click={resetColor}
       >
         <span><i class="fa-solid fa-eraser"></i></span>
-        <span>Reset</span>
+        <span>Clear</span>
       </button>
     </div>
   {/if}

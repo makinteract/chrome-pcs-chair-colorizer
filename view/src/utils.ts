@@ -1,4 +1,4 @@
-export async function setBadge({ text = '', color = '' }) {
+export async function setBadge({ text, color }) {
   const tabId = await getTabId();
   if (!tabId) return;
   chrome.action.setBadgeBackgroundColor({ color });
@@ -9,7 +9,7 @@ export async function setBadge({ text = '', color = '' }) {
 }
 
 export function resetBadge() {
-  setBadge({ text: '', color: '' });
+  setBadge({ text: '', color: '#000' });
 }
 
 export async function getActiveTab() {
