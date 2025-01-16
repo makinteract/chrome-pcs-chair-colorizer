@@ -19,7 +19,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://www.pcschair.org/venues/*"],
+      "matches": ["http://www.pcschair.org/*"],
       "js": ["content.js"]
     }
   ],
